@@ -58,5 +58,19 @@ Part 2:
 
 * Compute 53/192 + 61/511 (mod 1033) in python.
 
+* Extended Elucian Algorithm
+   * largest number that can divide 2 integers with out a remainder
+   * Bezcut coeffients `ax + by = gcd(a,b)`
+
+* finds modular inverse of an int
+
+**Code Explanation**
+
+1. Computes modular inverse of a which is x
+2. Extends Elican Algorithm
+3. Calculating modular inverse if denominators (den1/2)
+4. Computes teh sum of fractuins num1/nden + num2 / num2
+5. Output is the sum if fractions and modulus prime
+
 
 
