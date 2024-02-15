@@ -53,6 +53,13 @@ Part 2:
 3. Sets the parameters for the equation - chooses `g=2` `n=101`. N will typically be a large prime number
 4. encrypting solutions calulates x_ecrypted and y_encrypted
 * Raises to the power of x/y the result to modulo
+
+**Verifier**
+
+`xy_encrypted_proof = pow(g, int(solution[x] * solution[y]), n)`
+
+* This function call raises g to the power of x⋅y, modulo n.
+* This is to simulate a cryptographic "proof" that involves the multiplication of two values, x and y, which were previously solved from a system of equations.
   
 ### Assignment 5: 
 
