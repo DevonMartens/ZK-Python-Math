@@ -75,7 +75,7 @@ contract EllipticCurveSolidityContract {
     /// @return r The resulting elliptic curve point after multiplication
     /// @dev Calls a hypothetical precompiled contract at address 0x07 for efficient scalar multiplication
     function scalarMul(ECPoint memory p, uint256 scalar) public view returns (ECPoint memory r) {
-        (bool ok, bytes memory result) = address(7).staticcall(abi.encode(p.x, p.y, scalar));
+        (bool ok, bytes memory result) = address(0x07).staticcall(abi.encode(p.x, p.y, scalar));
         if(!ok) {
             revert("MultiplicationFailed");
         }
