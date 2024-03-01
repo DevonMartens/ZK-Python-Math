@@ -11,19 +11,23 @@ contract ECPairingVerifierTest is Test {
         verifier = new ECPairingVerifier();
     }
 
-    function testComputeX1() public {
-        // Example test for computeX1 with fixed inputs
-        uint256 x1 = 1;
-        uint256 x2 = 2;
-        uint256 x3 = 3;
-        // You need to replace these expected values with the actual expected results based on your contract logic
-        // For the sake of this example, let's just assume some values.
-        uint256[2] memory expected = [uint256(12345), uint256(67890)]; // Replace with actual expected x and y
+  function testComputeX1() public {
+    // Example test for computeX1 with fixed inputs
+    uint256 x1 = 1;
+    uint256 x2 = 2;
+    uint256 x3 = 3;
+    
+    // Update these expected values to match the computed X1 values from the Python script
+    uint256[2] memory expected = [
+        uint256(4503322228978077916651710446042370109107355802721800704639343137502100212473),
+        uint256(6132642251294427119375180147349983541569387941788025780665104001559216576968)
+    ];
 
-        uint256[2] memory result = verifier.computeX1(x1, x2, x3);
-        assertEq(result[0], expected[0], "X coordinate does not match");
-        assertEq(result[1], expected[1], "Y coordinate does not match");
-    }
+    uint256[2] memory result = verifier.computeX1(x1, x2, x3);
+    assertEq(result[0], expected[0], "X coordinate does not match");
+    assertEq(result[1], expected[1], "Y coordinate does not match");
+}
+
 
     function testVerifyComputation() public {
         // Example test for verifyComputation with mock inputs
