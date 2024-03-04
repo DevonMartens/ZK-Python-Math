@@ -80,19 +80,37 @@ contract ECPairingVerifier {
 
         // Prepare inputs for the pairing check
         // This is a simplified placeholder. The actual implementation depends on the specific pairing equation
-        bytes memory inputForPairing;
+       // bytes memory inputForPairing;
 
         // Prepare inputs for the pairing check
         bytes memory inputForPairing = prepareInputForPairing(A1, X1); // Example usage, adjust accordingly
 
         // Perform the pairing check by calling the precompiled contract at 0x08
-        (bool success, bytes memory output) = precompilePairing.staticcall(inputForPairing);
-        require(success, "Pairing check failed.");
+        
 
         // Interpret the output of the pairing check
         // Typically, the output is a single byte that indicates success or failure
         return output[0] != 0;
     }
+
+function prepareInputForPairing(
+    uint256[2] memory pointG1_1,
+    uint256[2] memory pointG1_2
+) internal pure returns (bytes memory) {
+    // Example of preparing inputs for the pairing check with two G1 points.
+    // Adjust your encoding and concatenation according to your specific needs.
+
+    // Encoding first G1 point (affine coordinates)
+    bytes memory encodedG1Point_1 = abi.encodePacked(pointG1_1[0], pointG1_1[1]);
+
+    // Encoding second G1 point (affine coordinates)
+    bytes memory encodedG1Point_2 = abi.encodePacked(pointG1_2[0], pointG1_2[1]);
+
+    // Combine the encoded points into a single bytes array for the pairing check
+    return abi.encodePacked(encodedG1Point_1, encodedG1Point_2);
+}
+
+
 
 
     // Add helper functions for EC operations (addition, scalar multiplication) and the pairing check
