@@ -85,3 +85,82 @@ After computing the result for each row, the function compares the computed elli
 It checks both the x and y coordinates for equality. If any computed point does not match the expected point, the function immediately returns false.
 
 Successful Verification: If all computed points match their corresponding expected points, the function completes its iterations and returns true, indicating the matrix multiplication operated on the elliptic curve points as expected and produced the anticipated output.
+
+### scalarMul
+
+    ```solidity 
+    function scalarMul(ECPoint memory p, uint256 scalar) public view returns (ECPoint memory r) {
+    ```
+
+This function takes in an elliptic curve `p` and a scalar.
+
+
+Then it initates a static call to the precompiled addresses 7. Passing in the x-axis and the y-axis of the points after encoding them.
+
+This function will revert if this line does not return ok.
+
+
+
+    ```solidity
+    (bool ok, bytes memory result) = address(7).staticcall(abi.encode(p.x, p.y, scalar));
+    ```
+
+
+The result is then decoded. Meaning the bytes array that is returned is then decoded back into two uint256's `x` and `y` and assigns them to the struct.
+
+    ```solidity
+    (r.x, r.y) = abi.decode(result, (uint256, uint256));
+    ```
+
+
+### Summary 
+
+This function essentially delegates the computation of an elliptic curve scalar multiplication to an external entity the precompiled contract at address(7), handles potential errors gracefully, and decodes the result back into a struct. This pattern is useful when the computation is too complex or gas-intensive to implement directly in Solidity, or when leveraging precompiled contracts provided by the Ethereum platform for specific cryptographic operations.
+
+### rationalAdd
+
+is designed to verify a specific cryptographic operation involving elliptic curve points. It checks whether the sum of two points `A` and `B`  on an elliptic curve is equal to another point calculated by multiplying a generator point `G` by a fraction `numerator/denominator` all operations considered under a finite field defined by `order`.
+
+    ```solidity
+    function rationalAdd(ECPoint calldata A, ECPoint calldata B, uint256 num, uint256 den) public view returns (bool verified) 
+    ```
+
+Function Declaration: The function `rationalAdd` takes two elliptic curve points `A` and `B` (as calldata, which is a way to pass arguments to functions that doesn't copy the data to memory, saving gas when called externally), and two `uint256` integers` num (numerator)` and `den (denominator)`. It is a public view function, meaning it can be called by anyone and does not modify the contract state. It returns a boolean verified.
+
+    ```solidity
+    if(den == 0){
+        revert InvalidDenominatorIsZero();
+    }
+    ```
+
+We first check if the denominator is 0 it is not valid if it is so the function will revert.
+
+    ```solidity
+    ECPoint memory LHS = add(A, B);
+    ```
+
+Left-Hand Side Calculation: Calculates the left-hand side `LHS` of the equation.
+
+This is done by adding points `A` and `B` using the add function (presumably a function defined elsewhere in the contract that performs elliptic curve point addition). The result is stored in memory as `LHS`.
+
+
+    ```solidity
+    uint256 rhs = mulmod(num, EllipticCurve.invMod(den, order), order);
+    ```
+
+Right-Hand Side Calculation: Calculates the right-hand side (RHS) of the equation. 
+
+1. First, it computes the "modular inverse" of `den` modulo order using `EllipticCurve.invMod(den, order)`, a function that calculates the multiplicative inverse of `den modul`o order (a prime number defining the size of the finite field). 
+
+2. Then, it multiplies this inverse by `num` and takes the result modulo order using `mulmod`, ensuring the result is within the field defined by order.
+
+    `mulmod`(uint x, uint y, uint k) returns (uint): compute (x * y) % k where the multiplication is performed with arbitrary precision and does not wrap around at 2**256. Assert that k != 0
+
+
+    ```solidity
+    verified = LHS.x == RHSx && LHS.y == RHSy;
+    ```
+
+This part checks if the x and y coordinates of the left-hand side (LHS) are equal to those of the right-hand side (RHSx, RHSy). 
+
+If they are equal, the operation verifies the equation `A+B=num/den ⋅G` on the elliptic curve, setting verified to true; otherwise, verified is false.
