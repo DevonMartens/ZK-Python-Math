@@ -211,3 +211,7 @@ if P.x() % n == r: his line checks whether the x-coordinate of P when reduced mo
 print("Signature is valid."): If the condition is met, the program prints that the signature is valid, indicating that the verification process has succeeded and the signature is authentic and untampered.
 
 else: print("Signature is invalid."): If the condition is not met, the program prints that the signature is invalid, indicating either that the signature does not match the message and public key or that the signature has been tampered with.
+ 
+
+
+ ,
